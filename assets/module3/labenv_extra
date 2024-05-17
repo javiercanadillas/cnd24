@@ -1,0 +1,7 @@
+#shellcheck disable=SC2148
+declare -x GOOGLE_CLOUD_PROJECT=$PROJECT_ID
+declare -x DB_INSTANCE=myinstance
+declare -x DB_NAME=mydatabase
+declare -x DB_USER=postgres
+declare -x DB_PASS=postgres
+declare -x INSTANCE_CONNECTION_NAME="$PROJECT_ID:$REGION:$DB_INSTANCE"

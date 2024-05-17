@@ -46,9 +46,57 @@ You're going to deploy a simple application to the cluster. To continue with the
 
 The steps you would need to follow are these:
 
-1. Create the app
+1. Create the app, and the requirements file.
+
+Pytho file, `hello.py`:
+
+```python
+#!/usr/bin/env python
+
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+  return 'Hello World!'
+
+if __name__ == '__main__':
+  app.run(host='0.0.0.0', port=8080)
+```
+
+Requirements file, `requirements.txt`:
+
+```text
+flask
+gunicorn
+```
+
 2. Create a Dockerfile
+
+```yaml
+FROM python:3.12.3-slim
+
+WORKDIR /app
+
+ADD . /app
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 8080
+
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "hello:app"]
+```
+
 3. Build the image and push it to Artifact Registry
+
+```bash
+gcloud artifacts repositories create my-repo --repository-format=docker --location=europe-west1
+```
+
+```bash
+gcloud builds submit -t europe-west1-docker.pkg.dev/$PROJECT_ID/my-repo/hello .
+```
+
 4. Create a pod manifest and deploy it to the cluster
 
 Try to do steps 1 to 3 by yourself. If you get stuck, ask Gemini for help. Once you have the image in Artifact Registry, ask Gemini to show you how to create the pod manifest and deploy it to the cluster.

@@ -1,0 +1,22 @@
+apiVersion: skaffold/v4beta2
+kind: Config
+profiles:
+- name: dev
+  activation:
+  - command: dev
+  manifests:
+    rawYaml:
+    - resources/*
+  build:
+    googleCloudBuild:
+      projectId: $PROJECT_ID
+    artifacts:
+    - image: back
+  deploy:
+    cloudrun:
+      projectid: $PROJECT_ID
+      region: $REGION
+  portForward:
+    - resourceType: service
+      resourceName: back
+      localPort: 8081

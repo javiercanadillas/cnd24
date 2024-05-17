@@ -1,0 +1,42 @@
+#!/bin/false
+# shellcheck shell=bash
+# This script is intended to be sourced
+
+## Main Script vars
+# Look & feel related vars
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+reset=$(tput sgr0)
+
+## Format info messages with script name in green
+info() {
+  echo "${green}${script_name}${reset}: ${1}" >&2
+}
+
+## Format error messages with script name in red
+error() {
+  echo "${red}${script_name}${reset}: ${1}" >&2
+}
+
+## Format warning messages with script name in yellow
+warning() {
+  echo "${yellow}${script_name}${reset}: ${1}" >&2
+}
+
+## Pretty prints including the width of the script name in spaces for correct alignment
+printfx() {
+  local -r message="$1" && shift
+  script_name_width=${#script_name}
+  printf "%*s  $message\n" "$script_name_width"
+}
+
+# Checks that project ID and region have been set up
+check_basic_requirements() {
+  # This script should not continue if Project ID or Region are not set
+  info "Setting up and persisting environment variables for the project..."
+  project_id=$(gcloud config get-value project --quiet 2> /dev/null) || { error "Error trying to read Project ID."; exit 1; }
+  region=$(gcloud config get-value compute/region --quiet 2> /dev/null) || { error "Error trying to read Cloud Region."; exit 1; }
+  [[ -z $project_id ]] && { error "Project ID has not been set. Please, run \"gcloud config set project <project_id>\" and try again."; exit 1; }
+  [[ -z $region ]] && { error "Cloud Region has not been set. Please, run \"gcloud config set compute/region <region>\" and try again."; exit 1; }
+}

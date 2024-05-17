@@ -1,0 +1,35 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: front
+  labels:
+    cloud.googleapis.com/location: $REGION
+  annotations:
+    run.googleapis.com/ingress: all
+spec:
+  template:
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      serviceAccountName: front-sa@$PROJECT_ID.iam.gserviceaccount.com
+      containers:
+      - image: front
+        ports:
+        - name: http1
+          containerPort: 8080
+        env:
+        - name: BACK_SERVICE_URL
+          value: $BACK_SERVICE_URL
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+        startupProbe:
+          timeoutSeconds: 240
+          periodSeconds: 240
+          failureThreshold: 1
+          tcpSocket:
+            port: 8080
+  traffic:
+  - percent: 100
+    latestRevision: true

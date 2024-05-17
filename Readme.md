@@ -36,3 +36,6 @@ source ~/.bashrc
 - Basic: [Understanding container images](docs/session1.md)
 - Homework: [Practicing with the Ngnix Docker Image](https://www.docker.com/blog/how-to-use-the-official-nginx-docker-image/)
 - Extra & optional: [Can you get Doom to work as a container from the browser?](https://shipyard.build/blog/doom-in-your-app-with-docker-compose-and-shipyard/)
+
+### Module 2 - Kubernetes
+- Basic: [Understanding Kubernetes](docs/session2.md)

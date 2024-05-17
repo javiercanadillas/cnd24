@@ -1,0 +1,18 @@
+apiVersion: skaffold/v4beta2
+kind: Config
+manifests:
+  rawYaml:
+  - resources/*
+build:
+  googleCloudBuild:
+    projectId: $PROJECT_ID
+  artifacts:
+  - image: front
+deploy:
+  cloudrun:
+    projectid: $PROJECT_ID
+    region: $REGION
+portForward:
+  - resourceType: service
+    resourceName: front
+    localPort: 8080

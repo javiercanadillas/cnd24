@@ -1,0 +1,24 @@
+apiVersion: skaffold/v4beta2
+kind: Config
+manifests:
+  rawYaml:
+  - cloudrun-manifests/myfirstapp-cloudrun-service.yaml
+profiles:
+  - name: dev
+    activation:
+      - command: dev
+    build:
+      artifacts:
+      - image: myfirstapp
+      tagPolicy:
+        sha256: {}
+      googleCloudBuild:
+        dockerImage: gcr.io/cloud-builders/docker
+        region: ${REGION}
+    deploy:
+      cloudrun:
+        region: ${REGION}
+    portForward:
+      - resourceType: service
+        resourceName: myfirstapp
+        localPort: 8080
